@@ -16,23 +16,25 @@ import java.net.UnknownHostException;
 public class CustomFixedStoreLeaseManager extends FixedStoreLeaseManager {
 	@Override
 	public DhcpMessage leaseRequest(DhcpRequestContext context, DhcpMessage request, InetAddress clientRequestedAddress, long clientRequestedExpirySecs) throws DhcpException {
+
+
 		DhcpMessage reply = null;
 		try {
-			// µ÷ÓÃ¸¸Àà·½·¨Éú³ÉÏìÓ¦
+			// è°ƒç”¨çˆ¶ç±»æ–¹æ³•ç”Ÿæˆå“åº”
 			reply = super.leaseRequest(context, request, clientRequestedAddress, clientRequestedExpirySecs);
-			// Ìí¼ÓÂ·ÓÉÆ÷Ñ¡Ïî
+			// æ·»åŠ è·¯ç”±å™¨é€‰é¡¹
 			if (reply != null && reply.getMessageType() == MessageType.DHCPACK) {
-				InetAddress routerAddress = InetAddress.getByName("192.138.70.1"); // Ìæ»»ÎªÊµ¼ÊµÄÂ·ÓÉÆ÷IPµØÖ·
+				InetAddress routerAddress = InetAddress.getByName("192.138.70.1"); // æ›¿æ¢ä¸ºå®é™…çš„è·¯ç”±å™¨IPåœ°å€,ç½‘å…³
 				Routers routersOption = new Routers();
 				routersOption.setAddresses((Inet4Address) routerAddress);
 
-				// ÉèÖÃ×ÓÍøÑÚÂë
+				// è®¾ç½®å­ç½‘æ©ç 
 				SubnetMask subnetMaskOption = new SubnetMask();
 				subnetMaskOption.setAddress((Inet4Address) routerAddress);
 
-				// ÉèÖÃÓòÃû·şÎñÆ÷
+				// è®¾ç½®åŸŸåæœåŠ¡å™¨
 				DomainNameServers dnsOption = new DomainNameServers();
-				// Ìí¼ÓÒ»¸ö»ò¶à¸öDNS·şÎñÆ÷µÄIPµØÖ·
+				// æ·»åŠ ä¸€ä¸ªæˆ–å¤šä¸ªDNSæœåŠ¡å™¨çš„IPåœ°å€
 				dnsOption.setAddresses((Inet4Address) routerAddress);
 
 				reply.getOptions().add(routersOption);
